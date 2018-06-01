@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UINavigationControllerDelegate, UITextFieldDelegate {
+class CreateMemeViewController: UIViewController, UINavigationControllerDelegate, UITextFieldDelegate {
 
     //outlets
     @IBOutlet weak var cancelButton: UIBarButtonItem!
@@ -21,11 +21,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
     @IBOutlet weak var bottomToolbar: UIToolbar!
     @IBOutlet weak var topNavigationBar: UINavigationBar!
     
-//    let memeTextAttributes:[String: Any] = [
-//        NSAttributedStringKey.strokeColor.rawValue: UIColor.red /* TODO: fill in appropriate UIColor */,
-//        NSAttributedStringKey.foregroundColor.rawValue: UIColor.black/* TODO: fill in appropriate UIColor */,
-//        NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-//        NSAttributedStringKey.strokeWidth.rawValue: 1.5/* TODO: fill in appropriate Float */]
+    let memeTextAttributes:[String: Any] = [
+        NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
+        NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
+        NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-Light", size: 40)!,
+        NSAttributedStringKey.strokeWidth.rawValue: 2.5]
     
     private let defaultTopText = "TOP"
     private let defaultBottomText = "BOTTOM"
@@ -44,9 +44,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
         unsubscribeFromKeyboardNotifications()
     }
     
-    @IBAction func cancelPressed(_ sender: Any) {
-        setupDefaults()
-    }
+    
     @IBAction func pickFromGallery(_ sender: Any) {
         presentAnImageWithSourceType(sourceType: UIImagePickerControllerSourceType.photoLibrary)
     }
@@ -63,6 +61,9 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
         }
     }
     
+    @IBAction func cancelPressed(_ sender: Any) {
+        
+    }
     private func setupDefaults() -> Void {
         imageView.image = nil
         shareButton.isEnabled = false
@@ -75,9 +76,10 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
     
     private func configureTextFields(textField: UITextField, content: String) -> Void {
         textField.text = content
-//        textField.textAlignment = NSTextAlignment.center
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = NSTextAlignment.center
         textField.delegate = self
-//        textField.defaultTextAttributes = memeTextAttributes
+        
     }
     
     private func clearTextField(textField: UITextField) -> Void {
@@ -121,7 +123,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
         let activityController = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
         activityController.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
             if completed {
-                self.save(memedImage: memedImage)
+              self.save(memedImage: memedImage)
+              let anotherController = 
             }
         }
         
@@ -137,8 +140,10 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
                         bottomText: bottomText.text!,
                         originalImage: imageView.image!,
                         memedImage: memedImage)
-        print(meme.description)
-        print("Meme was saved")
+        let object = UIApplication.shared.delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
+        
     }
     
     private func generateMemedImage() -> UIImage {
@@ -161,7 +166,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UITextFi
     }
 }
 
-extension ViewController: UIImagePickerControllerDelegate {
+extension CreateMemeViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = image
