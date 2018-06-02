@@ -124,7 +124,6 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
         activityController.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
             if completed {
               self.save(memedImage: memedImage)
-              let anotherController = 
             }
         }
         
